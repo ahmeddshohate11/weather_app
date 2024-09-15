@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:weather_app/cubits/get_weather_cubits/get_weather_cubit.dart';
-import 'package:weather_app/models/weather_model.dart';
 
 class WeatherInfoBody extends StatelessWidget {
-  final WeatherModel weatherModel;
   const WeatherInfoBody({
     super.key,
-    required this.weatherModel,
   });
 
   @override

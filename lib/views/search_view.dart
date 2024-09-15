@@ -30,8 +30,7 @@ class SearchView extends StatelessWidget {
         if (state is WeatherInitialState) {
           return const NoWeatherBody();
         } else if (state is WeatherLLoadedSate) {
-          return WeatherInfoBody(
-            weatherModel: state.weatherModel,
+          return const WeatherInfoBody(
           );
         } else {
           return const Text('oops there was an error');
