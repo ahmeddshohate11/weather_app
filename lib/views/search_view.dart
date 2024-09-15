@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/cubits/get_weather_cubits/get_weather_cubit.dart';
 import 'package:weather_app/cubits/get_weather_cubits/get_weather_states.dart';
-import 'package:weather_app/models/weather_model.dart';
-import 'package:weather_app/views/search_view.dart';
 import 'package:weather_app/widgets/no_weather_body.dart';
 import 'package:weather_app/widgets/weather_info_body.dart';
 
-class HomeView extends StatelessWidget {
-  HomeView({Key? key}) : super(key: key);
+class SearchView extends StatelessWidget {
+  const SearchView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +19,22 @@ class HomeView extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return SearchView();
+                  return const SearchView();
                 }));
               },
-              icon: Icon(Icons.search))
+              icon: const Icon(Icons.search))
         ],
       ),
       body:
           BlocBuilder<GetWeatherCubit, WeatherState>(builder: (context, state) {
         if (state is WeatherInitialState) {
-          return NoWeatherBody();
+          return const NoWeatherBody();
         } else if (state is WeatherLLoadedSate) {
-          return WeatherInfoBody();
+          return WeatherInfoBody(
+            weatherModel: state.weatherModel,
+          );
         } else {
-          return Text('oops there was an error');
+          return const Text('oops there was an error');
         }
       }),
     );

@@ -8,13 +8,13 @@ void main() {
 }
 
 class WeatherApp extends StatelessWidget {
-  const WeatherApp({Key? key}) : super(key: key);
+  const WeatherApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context)=>GetWeatherCubit(),
-      child: const MaterialApp(
+      child:  const MaterialApp(
         debugShowCheckedModeBanner: 
         false,
         home: HomeView(),
