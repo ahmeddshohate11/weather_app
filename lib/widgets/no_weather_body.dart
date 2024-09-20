@@ -2,27 +2,31 @@ import 'package:flutter/material.dart';
 
 class NoWeatherBody extends StatelessWidget {
   const NoWeatherBody({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+    double height = MediaQuery.of(context).size.height;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            const Text(
               'there is no weather 😔 start',
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 25,
               ),
             ),
-            Text(
+            SizedBox(
+              height: height * 0.01,
+            ),
+            const Text(
               'searching now 🔍',
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 25,
               ),
             )
           ],

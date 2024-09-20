@@ -1,80 +1,130 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+
+
+import 'package:animated_flutter_widgets/animations/shake_animation.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:weather_app/cubits/get_weather_cubits/get_weather_cubit.dart';
+import 'package:weather_app/main.dart';
+import 'package:weather_app/models/weather_model.dart';
+
+
 
 class WeatherInfoBody extends StatelessWidget {
-  const WeatherInfoBody({
-    super.key,
-  });
+  final WeatherModel weatherModel;
+
+  const WeatherInfoBody({Key? key, required this.weatherModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var weatherModel = BlocProvider.of<GetWeatherCubit>(context).weatherModel;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Alexandria',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 32,
+    double height = MediaQuery.of(context).size.height;
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+            getThemeColor(weatherModel.weathercondition),
+            getThemeColor(weatherModel.weathercondition)[300]!,
+            getThemeColor(weatherModel.weathercondition)[200]!
+          ])),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: height / 4,
             ),
-          ),
-          const Text(
-            'updated at 23:46',
-            style: TextStyle(
-              fontSize: 24,
-            ),
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset(
-                weatherModel.image!,
+            Text(
+              weatherModel.cityName,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 32,
               ),
-              Text(
-                weatherModel.temp.toString(),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 32,
+            ),
+            SizedBox(
+              height: height / 100,
+            ),
+            Text(
+              "updated at ${weatherModel.date.hour}:${weatherModel.date.minute}",
+              style: const TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(
+              height: height / 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ShakeAnimation(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: [
+                        BoxShadow(
+                          color: getThemeColor(
+                            BlocProvider.of<GetWeatherCubit>(context)
+                                .weatherModel
+                                ?.weathercondition,
+                          ).withOpacity(.2),
+                          blurRadius: 10,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: "https:${weatherModel.image}",
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  ),
                 ),
-              ),
-              Column(
-                children: [
-                  Text(
-                    'Maxtemp: ${weatherModel.maxTemp}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
+                Text(
+                  weatherModel.temp.round().toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 32,
                   ),
-                  Text(
-                    'Mintemp: ${weatherModel.minTemp}',
-                    style: const TextStyle(
-                      fontSize: 16,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "Min temp ${weatherModel.mintemp.round()}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          Text(
-            weatherModel.weatherCondition,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 32,
+                    SizedBox(
+                      height: height / 100,
+                    ),
+                    Text(
+                      "Max temp ${weatherModel.maxtemp.round()}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-        ],
+            SizedBox(
+              height: height / 20,
+            ),
+            Text(
+              weatherModel.weathercondition,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 32,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

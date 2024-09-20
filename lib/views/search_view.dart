@@ -1,41 +1,109 @@
+import 'package:animated_flutter_widgets/animated_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/cubits/get_weather_cubits/get_weather_cubit.dart';
-import 'package:weather_app/cubits/get_weather_cubits/get_weather_states.dart';
-import 'package:weather_app/widgets/no_weather_body.dart';
-import 'package:weather_app/widgets/weather_info_body.dart';
 
 class SearchView extends StatelessWidget {
-  const SearchView({super.key});
+  const SearchView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Weather App'),
-        backgroundColor: Colors.blueAccent,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return const SearchView();
-                }));
-              },
-              icon: const Icon(Icons.search))
-        ],
+        title: const Text("Search City"),
       ),
-      body:
-          BlocBuilder<GetWeatherCubit, WeatherState>(builder: (context, state) {
-        if (state is WeatherInitialState) {
-          return const NoWeatherBody();
-        } else if (state is WeatherLLoadedSate) {
-          return const WeatherInfoBody(
-          );
-        } else {
-          return const Text('oops there was an error');
-        }
-      }),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: height / 10,
+            ),
+            ShakeAnimation(
+              child: Image.asset(
+                'images/search.png',
+                height: height / 4,
+                width: width * 0.8,
+              ),
+            ),
+            SizedBox(
+              height: height / 20,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    onSubmitted: (value) async {
+                      var getWeatherCubit =
+                          BlocProvider.of<GetWeatherCubit>(context);
+                      getWeatherCubit.getWeather(
+                        cityName: value,
+                      );
+                      Navigator.pop(context);
+                    },
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.search,
+                          color: Colors.black,
+                        ),
+                      ),
+                      hintText: "Enter City Name",
+                      labelText: "Search",
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 15,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: .5,
+                    ),
+                  ),
+                  child: IconButton(
+                      style: ButtonStyle(
+                        shape: WidgetStateProperty.all(
+                          const CircleBorder(
+                            side: BorderSide(
+                              width: 2,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        var getWeatherCubit =
+                            BlocProvider.of<GetWeatherCubit>(context);
+                        getWeatherCubit.getWeatherFromLocation();
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.location_on_outlined)),
+                )
+              ],
+            ),
+            SizedBox(
+              height: height / 20,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
