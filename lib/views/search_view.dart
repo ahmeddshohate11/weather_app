@@ -75,6 +75,7 @@ class SearchView extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(
                       width: .5,
+                      
                     ),
                   ),
                   child: IconButton(
